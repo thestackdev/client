@@ -3,32 +3,21 @@ export default function TextInput({
   label,
   value,
   onChange,
-  type = 'input',
+  type,
 }) {
   return (
-    <div className="mt-6">
-      <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+    <div className="mt-6 w-full">
+      <label className="block mb-2 text-sm font-medium text-primary">
         {label}
       </label>
-      {type === 'input' ? (
-        <input
-          type="text"
-          className="bg-gray-50 border focus:border-[#3949AB] border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          required
-        />
-      ) : (
-        <textarea
-          type="text"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-          placeholder={placeholder}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          required
-        ></textarea>
-      )}
+      <input
+        type={type}
+        className="bg-gray-50 outline-none border focus:border-[#3949AB] border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 "
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        required
+      />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
 import clientPromise from 'lib/mongodb'
 import NextAuth from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
 import EmailProvider from 'next-auth/providers/email'
 import GitHubProvider from 'next-auth/providers/github'
 import GoogleProvider from 'next-auth/providers/google'
@@ -31,6 +32,17 @@ export default NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      name: 'Credentials',
+      async authorize(credentials, req) {
+        const user = { id: '1', name: 'J Smith', email: 'jsmith@example.com' }
+        if (user) {
+          return user
+        } else {
+          return null
+        }
+      },
     }),
   ],
   session: {
