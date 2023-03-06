@@ -1,33 +1,37 @@
 import Spinner from '@/components/Spinner'
 import TextInput from '@/components/TextInput'
-import { signIn, useSession } from 'next-auth/react'
+import axios from 'axios'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 function Login() {
   const [form, setForm] = useState({
-    email: '',
+    source: '',
     password: '',
   })
   const [loading, setLoading] = useState(false)
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSelector((state) => state.user)
   const router = useRouter()
 
   useEffect(() => {
     if (status === 'loading') return
     if (session) router.push('/')
-    console.log(session)
   }, [session, status])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       setLoading(true)
-      const response = await signIn('credentials', {
-        email: form.email,
-        password: form.password,
+
+      const _form = new URLSearchParams()
+      _form.append('source', form.source)
+      _form.append('password', form.password)
+
+      const response = await axios.post('/user/login', _form, {
+        withCredentials: true,
       })
       console.log(response)
     } catch (error) {
@@ -50,9 +54,9 @@ function Login() {
           <TextInput
             label="Email"
             placeholder="user@email.com"
-            value={form.email}
+            value={form.source}
             type="email"
-            onChange={(value) => setForm({ ...form, email: value })}
+            onChange={(value) => setForm({ ...form, source: value })}
           />
           <TextInput
             label="Password"
@@ -69,7 +73,7 @@ function Login() {
           </Link>
           <button
             disabled={loading}
-            className="w-full bg-primary text-white rounded-md mt-6 p-2 font-bold flex items-center justify-center"
+            className="w-full bg-primary text-white rounded-md mt-6 p-2 font-semibold flex items-center justify-center"
           >
             {loading && <Spinner height={19} width={19} color="#fff" />}
             Login
@@ -82,11 +86,11 @@ function Login() {
         </div>
         <button
           disabled={loading}
+          onClick={() => {}}
           className="w-full text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center mr-2 mb-2"
-          onClick={() => signIn('google')}
         >
           <Image
-            src="svg/logo/google.svg"
+            src="/svg/logo/google.svg"
             width={24}
             height={24}
             className="mr-2"
@@ -96,11 +100,11 @@ function Login() {
         </button>
         <button
           disabled={loading}
-          onClick={() => signIn('github')}
+          onClick={() => {}}
           className="w-full text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center mr-2 mb-2"
         >
           <Image
-            src="svg/logo/github.svg"
+            src="/svg/logo/github.svg"
             width={24}
             height={24}
             className="mr-2"
@@ -108,6 +112,12 @@ function Login() {
           />
           Sign in with Github
         </button>
+        <div className="text-center w-full mx-auto mt-6">
+          Don't have an account?{' '}
+          <Link href="/auth/register" className="text-primary">
+            Register
+          </Link>
+        </div>
       </div>
     </div>
   )
