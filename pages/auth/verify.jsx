@@ -21,6 +21,7 @@ function Verify() {
       _form.append('email', router.query?.email)
 
       const response = await axios.post('/user/signup', _form)
+
       console.log(response.data)
     } catch (error) {
       console.log(error)

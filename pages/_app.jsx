@@ -38,7 +38,7 @@ function Auth({ children, required }) {
 
   useEffect(() => {
     getSession()
-  }, [])
+  }, [router.pathname])
 
   useEffect(() => {
     if (status === 'loading') return

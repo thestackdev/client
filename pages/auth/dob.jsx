@@ -40,15 +40,9 @@ function DOB() {
       const nowDate = convertToNowFormat()
       const _form = new URLSearchParams()
 
-      console.log(session)
-
-      _form.append('name', session.user_name)
-      _form.append('username', session.user_nickname)
-      _form.append('password', session.user_password)
-      _form.append('mentor', 0)
       _form.append('dob', nowDate.getTime())
 
-      const response = await axios.post('/user/details', _form)
+      const response = await axios.patch('/user/details', _form)
       console.log(response.data)
       router.push('/auth/intrests')
     } catch (error) {
@@ -108,6 +102,7 @@ function DOB() {
             />
           </div>
           <button
+            type="submit"
             disabled={loading}
             className="w-full bg-primary text-white rounded-md mt-36     p-2 font-semibold flex items-center justify-center"
           >
