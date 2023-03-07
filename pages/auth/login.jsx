@@ -48,7 +48,7 @@ function Login() {
           onSubmit={handleSubmit}
           className="flex flex-col items-center justify-center mt-24 "
         >
-          <h1 className="text-primary font-bold text-3xl text-left w-full mb-6">
+          <h1 className="text-primary font-extrabold text-3xl text-left w-full mb-6">
             Login
           </h1>
           <TextInput

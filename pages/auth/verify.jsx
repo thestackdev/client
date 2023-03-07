@@ -1,5 +1,5 @@
 import Spinner from '@/components/Spinner'
-import Link from 'next/link'
+import axios from 'axios'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -7,12 +7,25 @@ import { useSelector } from 'react-redux'
 function Verify() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const { data: session, status } = useSelector((state) => state.user)
 
   useEffect(() => {
     if (status === 'loading') return
     if (session) router.push('/')
   }, [session, status])
+
+  const handleResend = async () => {
+    try {
+      const _form = new URLSearchParams()
+      _form.append('email', router.query?.email)
+
+      const response = await axios.post('/user/signup', _form)
+      console.log(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -21,12 +34,20 @@ function Verify() {
     for (let i = 0; i < inputs.length; i++) {
       otp.push(inputs[i].value)
     }
-    console.log(otp.join(''))
-    router.push('/auth/onboard')
+
     try {
       setLoading(true)
+      const _form = new URLSearchParams()
+      _form.append('email', router.query?.email)
+      _form.append('otp', otp.join(''))
+
+      const response = await axios.post('/user/verify_otp', _form)
+      console.log(response.data)
+
+      router.push('/auth/onboard')
     } catch (error) {
       console.log(error)
+      setError(error.response.data.error)
     }
     setLoading(false)
   }
@@ -71,7 +92,7 @@ function Verify() {
           className="flex flex-col items-center justify-center mt-24 "
         >
           <h1 className="text-primary font-bold text-3xl text-left w-full mb-6">
-            Verify your <br /> Email
+            Verify your Email
           </h1>
           <div className="w-full text-left">
             <span>
@@ -126,6 +147,11 @@ function Verify() {
               required
             />
           </div>
+          {error && (
+            <span className="text-red-500 text-sm text-center w-full mt-2">
+              {error}
+            </span>
+          )}
           <button
             disabled={loading}
             className="w-full bg-primary text-white rounded-md mt-6 p-2 font-semibold flex items-center justify-center disabled:bg-gray-300 disabled:text-slate-600"
@@ -135,10 +161,10 @@ function Verify() {
           </button>
         </form>
         <div className="text-center w-full mx-auto mt-6">
-          Already have an account?{' '}
-          <Link href="/login" className="text-primary">
-            Login
-          </Link>
+          Didn't receive a code?{' '}
+          <button onClick={handleResend} className="text-primary">
+            Resend
+          </button>
         </div>
       </div>
     </div>

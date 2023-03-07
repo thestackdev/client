@@ -1,7 +1,7 @@
 import Spinner from '@/components/Spinner'
 import { INTRESTS, SKILLS, SPORTS } from '@/utils/constants'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 function Intrests() {
@@ -14,10 +14,10 @@ function Intrests() {
   const { data: session, status } = useSelector((state) => state.user)
   const router = useRouter()
 
-  useEffect(() => {
-    if (status === 'loading') return
-    if (session) router.push('/')
-  }, [session, status])
+  // useEffect(() => {
+  //   if (status === 'loading') return
+  //   if (session) router.push('/')
+  // }, [session, status])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

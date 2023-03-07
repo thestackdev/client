@@ -20,13 +20,14 @@ function Onboard() {
     password: '',
     password2: '',
   })
+  const [usenameAvailable, setUsernameAvailable] = useState(false)
   const router = useRouter()
 
-  useEffect(() => {
-    if (status === 'loading') return
-    if (session) router.push('/')
-    console.log(session)
-  }, [session, status])
+  // useEffect(() => {
+  //   if (status === 'loading') return
+  //   if (session) router.push('/')
+  //   console.log(session)
+  // }, [session, status])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -40,6 +41,8 @@ function Onboard() {
         })
         return
       }
+
+      if (errors.name || errors.username || errors.password) return
 
       setLoading(true)
 
@@ -68,6 +71,37 @@ function Onboard() {
     })
   }, [form])
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (form.username.length > 0) {
+        axios
+          .get(`/user/check_username?user_name=${form.username}`)
+          .then((res) => {
+            if (res.data) {
+              if (res.data.available === 0) {
+                setUsernameAvailable(false)
+                setErrors({
+                  ...errors,
+                  username: 'Username already taken',
+                })
+                return
+              } else {
+                setUsernameAvailable(true)
+                setErrors({
+                  ...errors,
+                  username: '',
+                })
+              }
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+    }, 500)
+    return () => clearTimeout(timeout)
+  }, [form.username])
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 h-screen">
       <div className="col-span-2 hidden lg:block bg-primary"></div>
@@ -87,12 +121,15 @@ function Onboard() {
             onChange={(value) => setForm({ ...form, name: value })}
           />
           <TextInput
-            label="username"
+            label="Username"
             placeholder="johndoe"
             value={form.username}
             type="text"
             onChange={(value) => setForm({ ...form, username: value })}
           />
+          <label className="text-red-500 text-sm mt-1 text-left w-full">
+            {errors.username}
+          </label>
           <TextInput
             label="Password"
             placeholder="*********"
@@ -111,8 +148,8 @@ function Onboard() {
             {errors.password2}
           </label>
           <button
-            disabled={loading}
-            className="w-full bg-primary text-white rounded-md mt-6 p-2 font-semibold flex items-center justify-center"
+            disabled={loading || !usenameAvailable}
+            className="w-full bg-primary  disabled:bg-secondary text-white rounded-md mt-6 p-2 font-semibold flex items-center justify-center"
           >
             {loading && <Spinner height={19} width={19} color="#fff" />}
             Finish Register

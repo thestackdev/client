@@ -1,12 +1,13 @@
 import Spinner from '@/components/Spinner'
+import axios from 'axios'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 function DOB() {
   const [form, setForm] = useState({
-    day: '1',
-    month: '1',
+    day: '01',
+    month: '01',
     year: '2023',
   })
   const [loading, setLoading] = useState(false)
@@ -21,16 +22,34 @@ function DOB() {
   )
   const years = Array.from(Array(100).keys()).map((year) => `${year + 1924}`)
 
-  useEffect(() => {
-    if (status === 'loading') return
-    if (session) router.push('/')
-    console.log(session)
-  }, [session, status])
+  // useEffect(() => {
+  //   if (status === 'loading') return
+  //   if (session) router.push('/')
+  //   console.log(session)
+  // }, [session, status])
+
+  function convertToNowFormat() {
+    const date = new Date(form.year, form.month, form.day)
+    return new Date(Date.now() - date.getTimezoneOffset() * 60 * 1000)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       setLoading(true)
+      const nowDate = convertToNowFormat()
+      const _form = new URLSearchParams()
+
+      console.log(session)
+
+      _form.append('name', session.user_name)
+      _form.append('username', session.user_nickname)
+      _form.append('password', session.user_password)
+      _form.append('mentor', 0)
+      _form.append('dob', nowDate.getTime())
+
+      const response = await axios.post('/user/details', _form)
+      console.log(response.data)
       router.push('/auth/intrests')
     } catch (error) {
       console.log(error)
