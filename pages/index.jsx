@@ -1,14 +1,28 @@
-import { setUser } from '@/redux/slice/user'
+import { setStatus, setUser } from '@/redux/slice/user'
+import axios from 'axios'
 import { useDispatch } from 'react-redux'
 
 export default function Home() {
   const dispatch = useDispatch()
 
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post('/user/logout')
+      dispatch(setUser(null))
+      dispatch(setStatus('refresh'))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
-    <div className="h-screen w-screen flex items-center justify-center">
+    <div className="h-screen w-screen flex flex-col gap-4 items-center justify-center">
+      <button className="bg-primary text-white p-2 rounded-md w-52 font-bold">
+        Become a Mentor
+      </button>
       <button
-        onClick={() => dispatch(setUser(false))}
-        className="bg-primary p-2 w-52 text-white rounded-md font-bold"
+        onClick={handleLogout}
+        className="bg-red-500 p-2 w-52 text-white rounded-md font-bold"
       >
         Logout
       </button>

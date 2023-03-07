@@ -23,7 +23,7 @@ function Intrests() {
     e.preventDefault()
     try {
       setLoading(true)
-      router.push('/dashboard')
+      router.push('/')
     } catch (error) {
       console.log(error)
     }
