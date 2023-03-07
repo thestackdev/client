@@ -1,5 +1,6 @@
 import { setStatus, setUser } from '@/redux/slice/user'
 import axios from 'axios'
+import Link from 'next/link'
 import { useDispatch } from 'react-redux'
 
 export default function Home() {
@@ -7,7 +8,7 @@ export default function Home() {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post('/user/logout')
+      await axios.post('/user/logout')
       dispatch(setUser(null))
       dispatch(setStatus('refresh'))
     } catch (error) {
@@ -17,9 +18,12 @@ export default function Home() {
 
   return (
     <div className="h-screen w-screen flex flex-col gap-4 items-center justify-center">
-      <button className="bg-primary text-white p-2 rounded-md w-52 font-bold">
+      <Link
+        href="/mentor"
+        className="bg-primary text-center text-white p-2 rounded-md w-52 font-bold"
+      >
         Become a Mentor
-      </button>
+      </Link>
       <button
         onClick={handleLogout}
         className="bg-red-500 p-2 w-52 text-white rounded-md font-bold"
