@@ -48,7 +48,7 @@ function Register() {
           <h1 className="text-primary font-bold text-3xl text-left w-full mb-6">
             Create Account
           </h1>
-          <ul class="mb-2 flex list-none flex-row bg-gray-300 w-full rounded-md">
+          <ul className="mb-2 flex list-none flex-row bg-gray-300 w-full rounded-md">
             <li
               className={`w-full text-center ${
                 currentTab === 'email' && 'bg-primary text-white'

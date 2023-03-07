@@ -1,11 +1,12 @@
 import Spinner from '@/components/Spinner'
 import TextInput from '@/components/TextInput'
+import { setStatus } from '@/redux/slice/user'
 import axios from 'axios'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 function Login() {
   const [form, setForm] = useState({
@@ -15,6 +16,7 @@ function Login() {
   const [loading, setLoading] = useState(false)
   const { data: session, status } = useSelector((state) => state.user)
   const router = useRouter()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (status === 'loading') return
@@ -30,10 +32,8 @@ function Login() {
       _form.append('source', form.source)
       _form.append('password', form.password)
 
-      const response = await axios.post('/user/login', _form, {
-        withCredentials: true,
-      })
-      console.log(response)
+      await axios.post('/user/login', _form)
+      dispatch(setStatus('refresh'))
     } catch (error) {
       console.log(error)
     }

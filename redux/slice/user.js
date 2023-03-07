@@ -4,7 +4,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     data: null,
-    status: 'loading',
+    status: 'refresh',
   },
   reducers: {
     setUser: (state, action) => {

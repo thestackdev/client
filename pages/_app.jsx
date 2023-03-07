@@ -37,8 +37,8 @@ function Auth({ children, required }) {
   const router = useRouter()
 
   useEffect(() => {
-    getSession()
-  }, [])
+    if (status === 'refresh') getSession()
+  }, [status])
 
   useEffect(() => {
     if (status === 'loading') return

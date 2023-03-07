@@ -127,9 +127,16 @@ function Onboard() {
             type="text"
             onChange={(value) => setForm({ ...form, username: value })}
           />
-          <label className="text-red-500 text-sm mt-1 text-left w-full">
-            {errors.username}
-          </label>
+          {form.username.length > 0 &&
+            (usenameAvailable ? (
+              <label className="text-green-500 text-sm mt-1 text-left w-full">
+                Username Available
+              </label>
+            ) : (
+              <label className="text-red-500 text-sm mt-1 text-left w-full">
+                {errors.username}
+              </label>
+            ))}
           <TextInput
             label="Password"
             placeholder="*********"
