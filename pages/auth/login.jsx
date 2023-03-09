@@ -1,22 +1,19 @@
 import Spinner from '@/components/Spinner'
 import TextInput from '@/components/TextInput'
-import { setStatus } from '@/redux/slice/user'
-import axios from 'axios'
+import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 function Login() {
   const [form, setForm] = useState({
-    source: '',
+    username: '',
     password: '',
   })
   const [loading, setLoading] = useState(false)
-  const { data: session, status } = useSelector((state) => state.user)
+  const { data: session, status } = useSession()
   const router = useRouter()
-  const dispatch = useDispatch()
 
   useEffect(() => {
     if (status === 'loading') return
@@ -28,12 +25,20 @@ function Login() {
     try {
       setLoading(true)
 
-      const _form = new URLSearchParams()
-      _form.append('source', form.source)
-      _form.append('password', form.password)
+      // const _form = new URLSearchParams()
+      // _form.append('source', form.source)
+      // _form.append('password', form.password)
 
-      await axios.post('/user/login', _form)
-      dispatch(setStatus('refresh'))
+      const response = await signIn('credentials', {
+        username: form.username,
+        password: form.password,
+        redirect: false,
+      })
+
+      console.log(response)
+
+      // await axios.post('/user/login', _form)
+      // dispatch(setStatus('refresh'))
     } catch (error) {
       console.log(error)
     }
@@ -52,11 +57,11 @@ function Login() {
             Login
           </h1>
           <TextInput
-            label="Email"
-            placeholder="user@email.com"
-            value={form.source}
-            type="email"
-            onChange={(value) => setForm({ ...form, source: value })}
+            label="Username"
+            placeholder="johndoe"
+            value={form.username}
+            type="text"
+            onChange={(value) => setForm({ ...form, username: value })}
           />
           <TextInput
             label="Password"

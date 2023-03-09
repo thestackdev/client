@@ -1,8 +1,8 @@
 import Spinner from '@/components/Spinner'
 import axios from 'axios'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
 
 function DOB() {
   const [form, setForm] = useState({
@@ -11,7 +11,7 @@ function DOB() {
     year: '2023',
   })
   const [loading, setLoading] = useState(false)
-  const { data: session, status } = useSelector((state) => state.user)
+  const { data: session, status } = useSession()
   const router = useRouter()
 
   const days = Array.from(Array(31).keys()).map((day) =>
@@ -22,11 +22,10 @@ function DOB() {
   )
   const years = Array.from(Array(100).keys()).map((year) => `${year + 1924}`)
 
-  // useEffect(() => {
-  //   if (status === 'loading') return
-  //   if (session) router.push('/')
-  //   console.log(session)
-  // }, [session, status])
+  useEffect(() => {
+    if (status === 'loading') return
+    if (session) router.push('/')
+  }, [session, status])
 
   function convertToNowFormat() {
     const date = new Date(form.year, form.month, form.day)
@@ -38,11 +37,14 @@ function DOB() {
     try {
       setLoading(true)
       const nowDate = convertToNowFormat()
-      const _form = new URLSearchParams()
 
-      _form.append('dob', nowDate.getTime())
-
-      const response = await axios.patch('/user/details', _form)
+      const response = await axios.post(`/api/auth/register`, {
+        username: router.query.username,
+        password: router.query.password,
+        firstName: router.query.firstName,
+        lastName: router.query.lastName,
+        dateOfBirth: nowDate.getTime(),
+      })
       console.log(response.data)
       router.push('/auth/intrests')
     } catch (error) {

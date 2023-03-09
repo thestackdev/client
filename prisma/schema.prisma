@@ -1,0 +1,31 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id           String   @id @default(cuid())
+    username     String   @unique
+    firstName    String?
+    lastName     String?
+    image        String?  @unique
+    profileColor String?
+    email        String?  @unique
+    phone        String?  @unique
+    password     String
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+    dateOfBirth  DateTime
+    active       Boolean  @default(true)
+    isMentor     Boolean  @default(false)
+}
+
+model Otp {
+    id    String  @id @default(cuid())
+    otp   String
+    email String? @unique
+}

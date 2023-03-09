@@ -1,10 +1,10 @@
 import Spinner from '@/components/Spinner'
 import TextInput from '@/components/TextInput'
 import axios from 'axios'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 function Register() {
   const [form, setForm] = useState({
@@ -13,9 +13,9 @@ function Register() {
   })
   const [loading, setLoading] = useState(false)
   const [terms, setTerms] = useState(false)
-  const { data: session, status } = useSelector((state) => state.user)
   const router = useRouter()
   const [currentTab, setCurrentTab] = useState('email')
+  const { data: session, status } = useSession()
 
   useEffect(() => {
     if (status === 'loading') return
@@ -26,10 +26,7 @@ function Register() {
     e.preventDefault()
     try {
       setLoading(true)
-      const _form = new URLSearchParams()
-      _form.append('email', form.email)
-
-      const response = await axios.post('/user/signup', _form)
+      const response = await axios.get(`/api/auth/otp?email=${form.email}`)
       router.push(`/auth/verify?email=${form.email}`)
     } catch (error) {
       console.log(error)

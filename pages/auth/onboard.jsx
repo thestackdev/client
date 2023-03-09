@@ -1,39 +1,39 @@
 import Spinner from '@/components/Spinner'
 import TextInput from '@/components/TextInput'
 import axios from 'axios'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 function Onboard() {
   const [form, setForm] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     username: '',
     password: '',
     password2: '',
   })
   const [loading, setLoading] = useState(false)
-  const { data: session, status } = useSelector((state) => state.user)
   const [errors, setErrors] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     username: '',
     password: '',
     password2: '',
   })
   const [usenameAvailable, setUsernameAvailable] = useState(false)
   const router = useRouter()
+  const { data: session, status } = useSession()
 
-  // useEffect(() => {
-  //   if (status === 'loading') return
-  //   if (session) router.push('/')
-  //   console.log(session)
-  // }, [session, status])
+  useEffect(() => {
+    if (status === 'loading') return
+    if (session) router.push('/')
+    console.log(session)
+  }, [session, status])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const _form = new URLSearchParams()
-
       if (form.password !== form.password2) {
         setErrors({
           ...errors,
@@ -42,20 +42,25 @@ function Onboard() {
         return
       }
 
-      if (errors.name || errors.username || errors.password) return
+      if (
+        errors.firstName ||
+        errors.lastName ||
+        errors.username ||
+        errors.password
+      )
+        return
 
       setLoading(true)
 
-      _form.append('name', form.name)
-      _form.append('username', form.username)
-      _form.append('password', form.password)
-      _form.append('dob', 1675341327162)
-      _form.append('mentor', 0)
-
-      const response = await axios.post('/user/details', _form)
-      console.log(response.data)
-
-      router.push('/auth/dob')
+      router.push({
+        pathname: '/auth/dob',
+        query: {
+          username: form.username,
+          password: form.password,
+          firstName: form.firstName,
+          lastName: form.lastName,
+        },
+      })
     } catch (error) {
       console.log(error)
     }
@@ -64,7 +69,8 @@ function Onboard() {
 
   useEffect(() => {
     setErrors({
-      name: '',
+      firstName: '',
+      lastName: '',
       username: '',
       password: '',
       password2: '',
@@ -75,27 +81,13 @@ function Onboard() {
     const timeout = setTimeout(() => {
       if (form.username.length > 0) {
         axios
-          .get(`/user/check_username?user_name=${form.username}`)
+          .get(`/api/auth/register?username=${form.username}`)
           .then((res) => {
-            if (res.data) {
-              if (res.data.available === 0) {
-                setUsernameAvailable(false)
-                setErrors({
-                  ...errors,
-                  username: 'Username already taken',
-                })
-                return
-              } else {
-                setUsernameAvailable(true)
-                setErrors({
-                  ...errors,
-                  username: '',
-                })
-              }
-            }
+            setUsernameAvailable(true)
           })
           .catch((err) => {
             console.log(err)
+            setUsernameAvailable(true)
           })
       }
     }, 500)
@@ -114,11 +106,18 @@ function Onboard() {
             Fill up your details
           </h1>
           <TextInput
-            label="Name"
-            placeholder="John Doe"
-            value={form.name}
+            label="First Name"
+            placeholder="John"
+            value={form.firstName}
             type="text"
-            onChange={(value) => setForm({ ...form, name: value })}
+            onChange={(value) => setForm({ ...form, firstName: value })}
+          />
+          <TextInput
+            label="Last Name"
+            placeholder="Doe"
+            value={form.lastName}
+            type="text"
+            onChange={(value) => setForm({ ...form, lastName: value })}
           />
           <TextInput
             label="Username"

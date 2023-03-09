@@ -1,0 +1,56 @@
+import { comparePassword } from '@/helpers/password'
+import { PrismaClient } from '@prisma/client'
+import NextAuth from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+
+const prisma = new PrismaClient()
+
+let userAccount = null
+
+export default NextAuth({
+  secret: process.env.SECRET,
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {},
+      async authorize(credentials, req) {
+        credentials.username = credentials.username.toLowerCase()
+        const user = await prisma.user.findUnique({
+          where: {
+            username: credentials.username,
+          },
+        })
+        if (!user) {
+          throw new Error('Username/Password is did not match')
+        }
+        const isValid = await comparePassword(
+          credentials.password,
+          user.password
+        )
+        if (!isValid) {
+          throw new Error('Username/Password is did not match')
+        }
+        delete user.password
+        userAccount = user
+        return user
+      },
+    }),
+  ],
+  callbacks: {
+    async signIn(user) {
+      return user.user
+    },
+    async session({ session, token, user }) {
+      return token
+    },
+    async jwt({ token, user }) {
+      return token
+    },
+  },
+  session: {
+    strategy: 'jwt',
+  },
+  pages: {
+    signIn: '/auth/login',
+  },
+})

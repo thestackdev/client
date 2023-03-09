@@ -38,17 +38,16 @@ function Verify() {
 
     try {
       setLoading(true)
-      const _form = new URLSearchParams()
-      _form.append('email', router.query?.email)
-      _form.append('otp', otp.join(''))
 
-      const response = await axios.post('/user/verify_otp', _form)
+      const response = await axios.post(
+        `/api/auth/otp?email=${router.query?.email}&otp=${otp.join('')}`
+      )
       console.log(response.data)
 
       router.push('/auth/onboard')
     } catch (error) {
       console.log(error)
-      setError(error.response.data.error)
+      setError(error.response.data.message)
     }
     setLoading(false)
   }
