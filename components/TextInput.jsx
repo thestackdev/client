@@ -7,6 +7,7 @@ export default function TextInput({
   type,
   error,
   onClickLabel2,
+  label2Icon,
 }) {
   if (type === 'textarea') {
     return (
@@ -32,12 +33,17 @@ export default function TextInput({
           <label className="block mb-2 text-sm font-medium text-primary">
             {label}
           </label>
-          <label
-            onClick={onClickLabel2}
-            className="block cursor-pointer mb-2 text-sm font-medium text-primary"
-          >
-            {label2}
-          </label>
+          <div className="flex flex-row items-center justify-center">
+            {label2Icon && (
+              <span className="mr-2 h-4 w-4 text-primary">{label2Icon}</span>
+            )}
+            <label
+              onClick={onClickLabel2}
+              className="block cursor-pointer text-sm font-medium text-primary"
+            >
+              {label2}
+            </label>
+          </div>
         </div>
       </div>
       <input

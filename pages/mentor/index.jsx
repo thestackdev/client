@@ -4,31 +4,32 @@ import MentorDocuments from '@/components/MentorDocuments'
 import MentorOnboard from '@/components/MentorOnboard'
 import MentorSidebar from '@/components/MentorSidebar'
 import Progressbar from '@/components/Progressbar'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 function Mentor() {
   const [form, setForm] = useState({
-    school_name: '',
-    school_motive: '',
-    school_niche: '',
-    school_description: '',
-    mentor_language: '',
-    mentor_identity: '',
-    mentor_is_teacher: '',
-    mentor_experience: '',
-    mentor_document_to_teach: '',
-    address_line_1: '',
-    address_line_2: '',
-    address_city: '',
-    address_state: '',
-    address_postal_code: '',
-    mentor_pan_card: '',
-    mentor_video: '',
+    schoolName: '',
+    schoolMotive: '',
+    schoolNiche: '',
+    schoolDescription: '',
+    mentorLanguage: '',
+    mentorIdentity: '',
+    mentorIsTeacher: '',
+    mentorExperience: '',
+    mentorHaveDocuments: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    mentorPanCard: '',
+    mentorVideo: '',
   })
   const [loading, setLoading] = useState(false)
-  const { data: session, status } = useSelector((state) => state.user)
+  const { data: session, status } = useSession()
   const router = useRouter()
   const [step, setStep] = useState(1)
   const dispatch = useDispatch()
@@ -74,13 +75,12 @@ function Mentor() {
             <Progressbar progress={(step / totalSteps) * 100} color="#3949ab" />
             <div className="flex flex-row">
               <button
+                type="button"
                 onClick={() => setStep(step - 1)}
-                disabled={loading}
                 className={`w-full ${
                   step === 1 && 'invisible'
                 } text-gray-900 rounded-md mt-6 p-2 font-normal flex items-center justify-center`}
               >
-                {loading && <Spinner height={19} width={19} color="#fff" />}
                 Back
               </button>
               <button
@@ -101,4 +101,4 @@ function Mentor() {
 
 export default Mentor
 
-Mentor.Auth = false
+Mentor.auth = true

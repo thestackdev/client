@@ -1,7 +1,10 @@
+import { setUser } from '@/redux/slice/user'
 import store from '@/redux/store'
+import axios from 'axios'
 import Spinner from 'components/Spinner'
 import { SessionProvider, useSession } from 'next-auth/react'
-import { Provider as ReduxProvider } from 'react-redux'
+import { useEffect } from 'react'
+import { Provider as ReduxProvider, useDispatch } from 'react-redux'
 import 'styles/globals.css'
 
 export default function App({
@@ -25,6 +28,17 @@ export default function App({
 
 function Auth({ children }) {
   const { data: session, status } = useSession({ required: true })
+  const dispatch = useDispatch()
+
+  const fetchuser = async () => {
+    const response = await axios.get(`/api/users/${session.sub}`)
+    dispatch(setUser(response.data))
+  }
+
+  useEffect(() => {
+    if (status === 'loading') return
+    if (session) fetchuser()
+  }, [session])
 
   if (status === 'loading')
     return (

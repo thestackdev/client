@@ -1,5 +1,6 @@
 import Spinner from '@/components/Spinner'
 import TextInput from '@/components/TextInput'
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 import { signIn, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -74,6 +75,7 @@ function Login() {
             value={form.password}
             type={showPassword ? 'text' : 'password'}
             label2={showPassword ? 'Hide' : 'Show'}
+            label2Icon={showPassword ? <EyeIcon /> : <EyeSlashIcon />}
             onClickLabel2={() => setShowPassword(!showPassword)}
             onChange={(value) => setForm({ ...form, password: value })}
           />

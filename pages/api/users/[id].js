@@ -1,3 +1,4 @@
+import prisma from '@/lib/prisma'
 import { userPatchSchema } from '@/schema/user'
 import { getToken } from 'next-auth/jwt'
 
@@ -11,6 +12,13 @@ export default async function (req, res) {
 
   try {
     switch (req.method) {
+      case 'GET':
+        const user = await prisma.user.findUnique({
+          where: { id: token.sub },
+        })
+        delete user.password
+        res.status(200).send(user)
+        break
       case 'PATCH':
         const value = await userPatchSchema.validateAsync(req.body)
         await prisma.user.update({
