@@ -1,8 +1,9 @@
 import Spinner from '@/components/Spinner'
 import { INTRESTS, SKILLS, SPORTS } from '@/utils/constants'
+import axios from 'axios'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
 
 function Intrests() {
   const [form, setForm] = useState({
@@ -11,18 +12,16 @@ function Intrests() {
     sports: [],
   })
   const [loading, setLoading] = useState(false)
-  const { data: session, status } = useSelector((state) => state.user)
   const router = useRouter()
-
-  // useEffect(() => {
-  //   if (status === 'loading') return
-  //   if (session) router.push('/')
-  // }, [session, status])
+  const { data: session, status } = useSession()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       setLoading(true)
+      await axios.patch(`/api/users/${session.sub}`, {
+        intrests: form,
+      })
       router.push('/')
     } catch (error) {
       console.log(error)
@@ -48,6 +47,7 @@ function Intrests() {
             <div className="flex flex-wrap gap-2">
               {INTRESTS.map((intrest) => (
                 <span
+                  key={intrest}
                   className={`text-primary ${
                     form.intrests.includes(intrest) && 'bg-primary text-white'
                   } text-sm p-2 border rounded-lg cursor-pointer hover:bg-primary hover:text-white`}
@@ -75,6 +75,7 @@ function Intrests() {
             <div className="flex flex-wrap gap-2">
               {SKILLS.map((skill) => (
                 <span
+                  key={skill}
                   className={`text-primary ${
                     form.skills.includes(skill) && 'bg-primary text-white'
                   } text-sm p-2 border rounded-lg cursor-pointer hover:bg-primary hover:text-white`}
@@ -102,6 +103,7 @@ function Intrests() {
             <div className="flex flex-wrap gap-2">
               {SPORTS.map((sport) => (
                 <span
+                  key={sport}
                   className={`text-primary ${
                     form.sports.includes(sport) && 'bg-primary text-white'
                   } text-sm p-2 border rounded-lg cursor-pointer hover:bg-primary hover:text-white`}
@@ -139,4 +141,4 @@ function Intrests() {
 
 export default Intrests
 
-Intrests.Auth = false
+Intrests.auth = true

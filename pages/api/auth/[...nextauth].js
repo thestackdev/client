@@ -1,9 +1,7 @@
 import { comparePassword } from '@/helpers/password'
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-
-const prisma = new PrismaClient()
 
 let userAccount = null
 
@@ -20,16 +18,12 @@ export default NextAuth({
             username: credentials.username,
           },
         })
-        if (!user) {
-          throw new Error('Username/Password is did not match')
-        }
+        if (!user) return false
         const isValid = await comparePassword(
           credentials.password,
           user.password
         )
-        if (!isValid) {
-          throw new Error('Username/Password is did not match')
-        }
+        if (!isValid) return false
         delete user.password
         userAccount = user
         return user

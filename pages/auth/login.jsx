@@ -12,8 +12,13 @@ function Login() {
     password: '',
   })
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const { data: session, status } = useSession()
   const router = useRouter()
+  const [errors, setErrors] = useState({
+    username: '',
+    password: '',
+  })
 
   useEffect(() => {
     if (status === 'loading') return
@@ -25,25 +30,24 @@ function Login() {
     try {
       setLoading(true)
 
-      // const _form = new URLSearchParams()
-      // _form.append('source', form.source)
-      // _form.append('password', form.password)
-
       const response = await signIn('credentials', {
         username: form.username,
         password: form.password,
         redirect: false,
       })
 
-      console.log(response)
-
-      // await axios.post('/user/login', _form)
-      // dispatch(setStatus('refresh'))
+      if (!response.ok) {
+        setErrors({ username: 'Username/Password mismatch' })
+      }
     } catch (error) {
       console.log(error)
     }
     setLoading(false)
   }
+
+  useEffect(() => {
+    setErrors({ username: '', password: '' })
+  }, [form])
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 h-screen">
@@ -61,17 +65,20 @@ function Login() {
             placeholder="johndoe"
             value={form.username}
             type="text"
+            error={errors.username}
             onChange={(value) => setForm({ ...form, username: value })}
           />
           <TextInput
             label="Password"
             placeholder="*********"
             value={form.password}
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            label2={showPassword ? 'Hide' : 'Show'}
+            onClickLabel2={() => setShowPassword(!showPassword)}
             onChange={(value) => setForm({ ...form, password: value })}
           />
           <Link
-            href="/forgot-password"
+            href="/auth/forgot-password"
             className="w-full text-right mt-3 text-primary"
           >
             Forgot password?
@@ -130,4 +137,4 @@ function Login() {
 
 export default Login
 
-Login.Auth = false
+Login.auth = false

@@ -1,18 +1,16 @@
 import Spinner from '@/components/Spinner'
 import TextInput from '@/components/TextInput'
-import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-function Register() {
+function ForgotPassword() {
   const [form, setForm] = useState({
     email: '',
     phone: '',
   })
   const [loading, setLoading] = useState(false)
-  const [terms, setTerms] = useState(false)
   const router = useRouter()
   const [currentTab, setCurrentTab] = useState('email')
   const { data: session, status } = useSession()
@@ -30,12 +28,12 @@ function Register() {
     e.preventDefault()
     try {
       setLoading(true)
-      const response = await axios.get(
-        `/api/auth/otp?${currentTab}=${form[currentTab]}&reason=register`
-      )
-      console.log(response.data)
+      //   const response = await axios.get(
+      //     `/api/auth/otp?${currentTab}=${form[currentTab]}&reason=forgot_password`
+      //   )
+      //   console.log(response.data)
       router.push(
-        `/auth/verify?${currentTab}=${form[currentTab]}&source=${currentTab}`
+        `/auth/reset-password?${currentTab}=${form[currentTab]}&source=${currentTab}`
       )
     } catch (error) {
       if (error.response) {
@@ -67,7 +65,7 @@ function Register() {
           className="flex flex-col items-center justify-center mt-24 "
         >
           <h1 className="text-primary font-bold text-3xl text-left w-full mb-6">
-            Create Account
+            Forgot Password?
           </h1>
           <ul className="mb-2 flex list-none flex-row bg-gray-300 w-full rounded-md">
             <li
@@ -107,26 +105,8 @@ function Register() {
               onChange={(value) => setForm({ ...form, phone: value })}
             />
           )}
-          <div className="w-full mt-4 flex items-center">
-            <input
-              className="rounded mr-2 accent-primary"
-              type="checkbox"
-              value={terms}
-              onChange={(e) => setTerms(e.target.checked)}
-            />
-            <label>
-              I accept with
-              <Link href="/terms" className="text-primary mx-1">
-                terms
-              </Link>
-              and
-              <Link href="/policy" className="text-primary mx-1">
-                privacy policy
-              </Link>
-            </label>
-          </div>
           <button
-            disabled={loading || !terms}
+            disabled={loading}
             className="w-full bg-primary text-white rounded-md mt-6 p-2 font-semibold flex items-center justify-center disabled:bg-gray-300 disabled:text-slate-600"
           >
             {loading && <Spinner height={19} width={19} color="#fff" />}
@@ -134,7 +114,7 @@ function Register() {
           </button>
         </form>
         <div className="text-center w-full mx-auto mt-6">
-          Already have an account?{' '}
+          Remember password?{' '}
           <Link href="/auth/login" className="text-primary">
             Login
           </Link>
@@ -144,6 +124,6 @@ function Register() {
   )
 }
 
-export default Register
+export default ForgotPassword
 
-Register.auth = false
+ForgotPassword.auth = false

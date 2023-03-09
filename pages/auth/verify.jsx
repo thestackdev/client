@@ -9,6 +9,9 @@ function Verify() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { data: session, status } = useSelector((state) => state.user)
+  const [resend, setResend] = useState(false)
+
+  const { source } = router.query
 
   useEffect(() => {
     if (status === 'loading') return
@@ -17,11 +20,9 @@ function Verify() {
 
   const handleResend = async () => {
     try {
-      const _form = new URLSearchParams()
-      _form.append('email', router.query?.email)
-
-      const response = await axios.post('/user/signup', _form)
-
+      const response = await axios.get(
+        `/api/auth/otp?${source}=${router.query[source]}&reason=register`
+      )
       console.log(response.data)
     } catch (error) {
       console.log(error)
@@ -40,11 +41,16 @@ function Verify() {
       setLoading(true)
 
       const response = await axios.post(
-        `/api/auth/otp?email=${router.query?.email}&otp=${otp.join('')}`
+        `/api/auth/otp?${source}=${router.query[source]}&otp=${otp.join(
+          ''
+        )}&reason=register`
       )
       console.log(response.data)
 
-      router.push('/auth/onboard')
+      router.push({
+        pathname: '/auth/onboard',
+        query: { [source]: router.query[source], source: source },
+      })
     } catch (error) {
       console.log(error)
       setError(error.response.data.message)
@@ -166,6 +172,13 @@ function Verify() {
             Resend
           </button>
         </div>
+        {resend && (
+          <div className="text-center w-full mx-auto mt-2">
+            <span className="text-green-500">
+              Code has been sent successfully!
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -173,4 +186,4 @@ function Verify() {
 
 export default Verify
 
-Verify.Auth = false
+Verify.auth = false

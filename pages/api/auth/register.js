@@ -1,13 +1,11 @@
-import userSchema from '@/schema/user'
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
+import { registerUserSchema } from '@/schema/user'
 import bcrypt from 'bcrypt'
 
-const prisma = new PrismaClient()
-
 export default async (req, res) => {
-  switch (req.method) {
-    case 'GET':
-      try {
+  try {
+    switch (req.method) {
+      case 'GET':
         const user = await prisma.user.findUnique({
           where: {
             username: req.query?.username,
@@ -18,31 +16,30 @@ export default async (req, res) => {
         } else {
           res.status(401).send({ message: 'username already taken' })
         }
-      } catch (err) {
-        console.log(err)
-        res.status(401).send({ message: 'Something went wrong' })
-      }
-      break
-    case 'POST':
-      try {
-        const value = await userSchema.validateAsync(req.body)
+
+        break
+      case 'POST':
+        const value = await registerUserSchema.validateAsync(req.body)
+
         const hash = await bcrypt.hash(value.password, 10)
         await prisma.user.create({
           data: {
             username: value.username,
             password: hash,
-            email: value.email,
+            [value.source]: value[value.source],
             firstName: value.firstName,
             lastName: value.lastName,
             dateOfBirth: value.dateOfBirth,
           },
         })
         res.status(200).send({ success: true })
-      } catch (err) {
-        return res.status(503).send({ message: err.message })
-      }
-      break
-    default:
-      res.status(405).json({ message: 'This request cannot be processed' })
+        break
+
+      default:
+        res.status(405).json({ message: 'This request cannot be processed' })
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(401).send({ message: 'Something went wrong' })
   }
 }

@@ -22,10 +22,21 @@ model User {
     dateOfBirth  DateTime
     active       Boolean  @default(true)
     isMentor     Boolean  @default(false)
+    intrests     Json     @default("{}")
+
+    @@unique([email, phone])
 }
 
 model Otp {
-    id    String  @id @default(cuid())
-    otp   String
-    email String? @unique
+    id        String   @id @default(cuid())
+    otp       String
+    source    String
+    reason    Reason
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum Reason {
+    REGISTER
+    FORGOT_PASSWORD
 }

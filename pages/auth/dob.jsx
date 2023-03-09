@@ -1,6 +1,6 @@
 import Spinner from '@/components/Spinner'
 import axios from 'axios'
-import { useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
@@ -13,6 +13,8 @@ function DOB() {
   const [loading, setLoading] = useState(false)
   const { data: session, status } = useSession()
   const router = useRouter()
+
+  const { source } = router.query
 
   const days = Array.from(Array(31).keys()).map((day) =>
     (day + 1).toString().length === 1 ? `0${day + 1}` : `${day + 1}`
@@ -39,14 +41,20 @@ function DOB() {
       const nowDate = convertToNowFormat()
 
       const response = await axios.post(`/api/auth/register`, {
-        username: router.query.username,
-        password: router.query.password,
-        firstName: router.query.firstName,
-        lastName: router.query.lastName,
+        username: router.query?.username,
+        password: router.query?.password,
+        firstName: router.query?.firstName,
+        lastName: router.query?.lastName,
         dateOfBirth: nowDate.getTime(),
+        [source]: router.query?.[source],
+        source: source,
       })
       console.log(response.data)
-      router.push('/auth/intrests')
+      await signIn('credentials', {
+        username: router.query?.username,
+        password: router.query?.password,
+        callbackUrl: '/auth/intrests',
+      })
     } catch (error) {
       console.log(error)
     }
@@ -119,4 +127,4 @@ function DOB() {
 
 export default DOB
 
-DOB.Auth = false
+DOB.auth = false

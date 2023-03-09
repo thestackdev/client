@@ -14,6 +14,7 @@ function Onboard() {
     password2: '',
   })
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -25,10 +26,11 @@ function Onboard() {
   const router = useRouter()
   const { data: session, status } = useSession()
 
+  const { source } = router.query
+
   useEffect(() => {
     if (status === 'loading') return
     if (session) router.push('/')
-    console.log(session)
   }, [session, status])
 
   const handleSubmit = async (e) => {
@@ -59,6 +61,8 @@ function Onboard() {
           password: form.password,
           firstName: form.firstName,
           lastName: form.lastName,
+          source: source,
+          [source]: router.query?.[source],
         },
       })
     } catch (error) {
@@ -77,19 +81,26 @@ function Onboard() {
     })
   }, [form])
 
+  const handleCheckUsername = async () => {
+    setUsernameAvailable(false)
+    try {
+      const response = await axios.get(
+        `/api/auth/register?username=${form.username}`
+      )
+      console.log(response.data)
+      setUsernameAvailable(true)
+    } catch (error) {
+      console.log(error)
+      setErrors({
+        ...errors,
+        username: 'Username already taken',
+      })
+    }
+  }
+
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (form.username.length > 0) {
-        axios
-          .get(`/api/auth/register?username=${form.username}`)
-          .then((res) => {
-            setUsernameAvailable(true)
-          })
-          .catch((err) => {
-            console.log(err)
-            setUsernameAvailable(true)
-          })
-      }
+      if (form.username.length > 0) handleCheckUsername()
     }, 500)
     return () => clearTimeout(timeout)
   }, [form.username])
@@ -124,41 +135,40 @@ function Onboard() {
             placeholder="johndoe"
             value={form.username}
             type="text"
+            error={errors.username}
             onChange={(value) => setForm({ ...form, username: value })}
           />
-          {form.username.length > 0 &&
-            (usenameAvailable ? (
-              <label className="text-green-500 text-sm mt-1 text-left w-full">
-                Username Available
-              </label>
-            ) : (
-              <label className="text-red-500 text-sm mt-1 text-left w-full">
-                {errors.username}
-              </label>
-            ))}
+          {form.username.length > 0 && usenameAvailable && (
+            <label className="text-green-500 text-sm mt-1 text-left w-full">
+              Username Available
+            </label>
+          )}
           <TextInput
             label="Password"
             placeholder="*********"
             value={form.password}
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            error={errors.password}
+            label2={showPassword ? 'Hide' : 'Show'}
+            onClickLabel2={() => setShowPassword(!showPassword)}
             onChange={(value) => setForm({ ...form, password: value })}
           />
           <TextInput
             label="Password repeat"
             placeholder="*********"
             value={form.password2}
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            error={errors.password2}
+            label2={showPassword ? 'Hide' : 'Show'}
+            onClickLabel2={() => setShowPassword(!showPassword)}
             onChange={(value) => setForm({ ...form, password2: value })}
           />
-          <label className="text-red-500 text-left w-full">
-            {errors.password2}
-          </label>
           <button
             disabled={loading || !usenameAvailable}
             className="w-full bg-primary  disabled:bg-secondary text-white rounded-md mt-6 p-2 font-semibold flex items-center justify-center"
           >
             {loading && <Spinner height={19} width={19} color="#fff" />}
-            Finish Register
+            Submit
           </button>
         </form>
       </div>
@@ -168,4 +178,4 @@ function Onboard() {
 
 export default Onboard
 
-Onboard.Auth = false
+Onboard.auth = false
