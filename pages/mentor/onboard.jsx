@@ -9,6 +9,7 @@ import axios from 'axios'
 import crypto from 'crypto'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 function Mentor() {
   const [form, setForm] = useState({
@@ -33,6 +34,7 @@ function Mentor() {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const totalSteps = 4
+  const user = useSelector((state) => state.user.data)
 
   const getSingedUrl = async (key) => {
     try {
@@ -97,8 +99,16 @@ function Mentor() {
   }
 
   useEffect(() => {
-    checkPreviousSubmission()
-  }, [])
+    if (user?.isMentor) router.push('/mentor/slots')
+  }, [user])
+
+  if (!user) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center">
+        <Spinner height={50} width={50} color="#3949ab" />
+      </div>
+    )
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 h-screen">

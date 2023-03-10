@@ -60,7 +60,7 @@ const Slots = () => {
           work. It's 45 minute process
         </span>
       </div>
-      <div className="flex flex-row items-center justify-between mx-auto mt-10 max-w-[1200px]">
+      <div className="flex p-4 flex-col-reverse lg:flex-row items-center gap-4 justify-between mx-auto mt-10 max-w-[1200px]">
         <div className="flex items-center">
           <ChevronLeftIcon
             className="h-8 w-8 font-black text-primary mr-6 cursor-pointer"
@@ -70,9 +70,9 @@ const Slots = () => {
             }}
           />
           <div className="flex gap-2 items-center ">
-            {days.slice(startDate, 10 + startDate).map((day, index) => (
+            {days.slice(startDate, 5 + startDate).map((day, index) => (
               <div
-                className={`p-2 w-20 h-18 px-4 rounded-md text-center cursor-pointer ${
+                className={`p-2 w-16 h-16 px-4 rounded-md text-center cursor-pointer ${
                   selectedDate?.date === day.date && 'bg-primary text-white'
                 }`}
                 key={index}
@@ -93,7 +93,7 @@ const Slots = () => {
             }}
           />
         </div>
-        <div className="max-w-md -mt-6">
+        <div className="self-end max-w-md -mt-6">
           <SelectDropdown
             options={MONTHS_OPTIONS}
             value={selectedMonth}
@@ -101,7 +101,7 @@ const Slots = () => {
           />
         </div>
       </div>
-      <div className="max-w-[1200px] mx-auto mt-10">
+      <div className="max-w-[1200px] p-4 mx-auto mt-10">
         <div className="flex flex-row items-center justify-between mb-4">
           <span className="text-xl">Select Time Slot</span>
           <div className="flex flex-row gap-4">
@@ -142,7 +142,7 @@ const Slots = () => {
         </div>
       </div>
       {selectedTimeSlots && selectedDate && (
-        <div className="max-w-[1200px] mx-auto mt-10 flex flex-row items-center justify-between">
+        <div className="max-w-[1200px] p-4 flex-col mx-auto mt-10 flex lg:flex-row items-center justify-between">
           <div className="flex flex-col gap-4 text-xl font-bold w-fit">
             <span>
               {selectedDate?.day}, {selectedDate?.date}{' '}
@@ -154,7 +154,7 @@ const Slots = () => {
           </div>
           <Link
             href={`/mentor/verification?timeslot=${selectedTimeSlots}&date=${selectedDate?.date}&month=${MONTHS_OPTIONS[selectedMonth].label}&day=${selectedDate?.day}`}
-            className="mt-16 bg-primary text-white rounded-md p-2 w-32 text-center"
+            className="mt-16 w-full bg-primary text-white rounded-md p-2 md:w-32 text-center"
           >
             Proceed
           </Link>

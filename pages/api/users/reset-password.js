@@ -28,6 +28,7 @@ export default async function (req, res) {
         res.status(405).json({ message: 'This request cannot be processed' })
     }
   } catch (err) {
+    console.log(err)
     if (err instanceof joi.ValidationError) {
       res.status(400).send({ message: err.message })
       return
