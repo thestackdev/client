@@ -87,7 +87,6 @@ function Onboard() {
       const response = await axios.get(
         `/api/auth/register?username=${form.username}`
       )
-      console.log(response.data)
       setUsernameAvailable(true)
     } catch (error) {
       console.log(error)

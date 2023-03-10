@@ -7,10 +7,12 @@ export default function MentorSidebar() {
         Come teach <br /> with us.
       </h1>
       <Image
-        className="absolute bottom-0 -right-24"
+        className="absolute bottom-0 -right-24 w-auto h-auto"
         src="/png/mentor.png"
+        alt="mentor"
         width={500}
         height={500}
+        priority
       />
     </div>
   )

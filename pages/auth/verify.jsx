@@ -23,7 +23,6 @@ function Verify() {
       const response = await axios.get(
         `/api/auth/otp?${source}=${router.query[source]}&reason=register`
       )
-      console.log(response.data)
     } catch (error) {
       console.log(error)
     }
@@ -45,7 +44,6 @@ function Verify() {
           ''
         )}&reason=register`
       )
-      console.log(response.data)
 
       router.push({
         pathname: '/auth/onboard',

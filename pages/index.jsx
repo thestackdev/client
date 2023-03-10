@@ -9,10 +9,10 @@ export default function Home() {
     <div className="h-screen w-screen flex flex-col gap-4 items-center justify-center">
       <h1 className="text-4xl font-bold">Welcome, {user?.username}</h1>
       <Link
-        href="/mentor"
+        href={user?.isMentor ? '/mentor/dashboard' : '/mentor/onboard'}
         className="bg-primary text-center text-white p-2 rounded-md w-52 font-bold"
       >
-        Become a Mentor
+        {user?.isMentor ? 'Continue to Dashboard' : 'Become a Mentor'}
       </Link>
       <button
         onClick={signOut}

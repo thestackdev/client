@@ -1,5 +1,6 @@
 import Spinner from '@/components/Spinner'
 import TextInput from '@/components/TextInput'
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -85,6 +86,7 @@ function ResetPassword() {
             error={errors.password}
             type={showPassword ? 'text' : 'password'}
             label2={showPassword ? 'Hide' : 'Show'}
+            label2Icon={showPassword ? <EyeIcon /> : <EyeSlashIcon />}
             onClickLabel2={() => setShowPassword(!showPassword)}
             onChange={(value) => setForm({ ...form, password: value })}
           />
@@ -95,6 +97,7 @@ function ResetPassword() {
             error={errors.password2}
             type={showPassword ? 'text' : 'password'}
             label2={showPassword ? 'Hide' : 'Show'}
+            label2Icon={showPassword ? <EyeIcon /> : <EyeSlashIcon />}
             onClickLabel2={() => setShowPassword(!showPassword)}
             onChange={(value) => setForm({ ...form, password2: value })}
           />

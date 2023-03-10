@@ -1,9 +1,24 @@
 import { BookOpenIcon } from '@heroicons/react/24/outline'
+import axios from 'axios'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
 function Verification() {
   const router = useRouter()
+  const { data: session } = useSession()
+
+  const updateVerification = async (e) => {
+    e.preventDefault()
+    try {
+      await axios.patch(`/api/users/${session.sub}`, {
+        isMentor: true,
+      })
+      router.replace('/mentor/dashboard')
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -64,6 +79,12 @@ function Verification() {
             </div>
           </div>
         </div>
+        <button
+          onClick={updateVerification}
+          className="bg-primary text-white rounded-md p-2 font-normal flex items-center self-end justify-center"
+        >
+          Proceed
+        </button>
       </div>
     </div>
   )

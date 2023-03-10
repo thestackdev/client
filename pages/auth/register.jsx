@@ -33,7 +33,6 @@ function Register() {
       const response = await axios.get(
         `/api/auth/otp?${currentTab}=${form[currentTab]}&reason=register`
       )
-      console.log(response.data)
       router.push(
         `/auth/verify?${currentTab}=${form[currentTab]}&source=${currentTab}`
       )

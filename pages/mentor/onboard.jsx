@@ -4,10 +4,11 @@ import MentorDocuments from '@/components/MentorDocuments'
 import MentorOnboard from '@/components/MentorOnboard'
 import MentorSidebar from '@/components/MentorSidebar'
 import Progressbar from '@/components/Progressbar'
-import { useSession } from 'next-auth/react'
+import Spinner from '@/components/Spinner'
+import axios from 'axios'
+import crypto from 'crypto'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
 
 function Mentor() {
   const [form, setForm] = useState({
@@ -29,11 +30,18 @@ function Mentor() {
     mentorVideo: '',
   })
   const [loading, setLoading] = useState(false)
-  const { data: session, status } = useSession()
   const router = useRouter()
   const [step, setStep] = useState(1)
-  const dispatch = useDispatch()
   const totalSteps = 4
+
+  const getSingedUrl = async (key) => {
+    try {
+      const response = await axios.get(`/api/files/upload?key=${key}`)
+      return response.data?.uploadUrl
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -42,21 +50,55 @@ function Mentor() {
       return
     }
 
+    if (!form.mentorPanCard || !form.mentorVideo) {
+      alert('Please upload all the documents')
+      return
+    }
+
     try {
       setLoading(true)
+      const pancardUrlKey = crypto.randomBytes(16).toString('hex')
+      const videoUrlKey = crypto.randomBytes(16).toString('hex')
 
-      //   const _form = new URLSearchParams()
-      //   _form.append('source', form.source)
-      //   _form.append('password', form.password)
+      const panCardUploadUrl = await getSingedUrl(pancardUrlKey)
+      const videoUploadUrl = await getSingedUrl(videoUrlKey)
 
-      //   await axios.post('/user/login', _form)
-      //   dispatch(setStatus('refresh'))
+      await axios.put(panCardUploadUrl, form.mentorPanCard, {
+        headers: {
+          'Content-Type': 'image/jpg',
+        },
+      })
+
+      await axios.put(videoUploadUrl, form.mentorVideo, {
+        headers: {
+          'Content-Type': 'image/jpg',
+        },
+      })
+
+      await axios.post('/api/mentor', {
+        ...form,
+        mentorPanCard: pancardUrlKey,
+        mentorVideo: videoUrlKey,
+      })
       router.push('/mentor/slots')
     } catch (error) {
       console.log(error)
     }
     setLoading(false)
   }
+
+  const checkPreviousSubmission = async () => {
+    try {
+      await axios.get('/api/mentor')
+      router.push('/mentor/slots')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    checkPreviousSubmission()
+  }, [])
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 h-screen">

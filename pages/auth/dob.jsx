@@ -49,7 +49,6 @@ function DOB() {
         [source]: router.query?.[source],
         source: source,
       })
-      console.log(response.data)
       await signIn('credentials', {
         username: router.query?.username,
         password: router.query?.password,

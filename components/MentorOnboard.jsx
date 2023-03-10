@@ -14,31 +14,32 @@ export default function MentorOnboard({ form, setForm }) {
       <TextInput
         label="School Name"
         placeholder="Enter School Name"
-        value={form.school_name}
+        value={form.schoolName}
         type="text"
-        onChange={(value) => setForm({ ...form, school_name: value })}
+        onChange={(value) => setForm({ ...form, schoolName: value })}
       />
       <TextInput
         label="School's Motive"
         placeholder="Enter School's Motive"
-        value={form.school_motive}
+        value={form.schoolMotive}
         type="text"
-        onChange={(value) => setForm({ ...form, school_motive: value })}
+        onChange={(value) => setForm({ ...form, schoolMotive: value })}
       />
       <SelectDropdown
         label="What's your niche?"
         placeholder="Enter School's Motive"
         options={NICHE_OPTIONS}
-        defaultOption="Select an option"
-        onChange={(value) => setForm({ ...form, school_niche: value })}
-        value={form.school_niche}
+        onChange={(value) => setForm({ ...form, schoolNiche: value })}
+        value={form.schoolNiche}
+        defaultOption="Select Niche"
+        required
       />
       <TextInput
         label="Describe about yourself and mention your education/qualifications"
         placeholder="Enter School's Motive"
-        value={form.school_description}
+        value={form.schoolDescription}
         type="textarea"
-        onChange={(value) => setForm({ ...form, school_description: value })}
+        onChange={(value) => setForm({ ...form, schoolDescription: value })}
       />
     </div>
   )

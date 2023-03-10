@@ -15,45 +15,43 @@ export default function MentorDetails({ form, setForm }) {
       </h1>
       <SelectDropdown
         label="In what language do you teach?"
-        placeholder="Select your language"
         options={LANGUAGE_OPTIONS}
         defaultOption="Select an option"
-        onChange={(value) => setForm({ ...form, mentor_language: value })}
-        value={form.mentor_language}
+        onChange={(value) => setForm({ ...form, mentorLanguage: value })}
+        value={form.mentorLanguage}
+        required
       />
       <SelectDropdown
         label="How do you identify yourself?"
-        placeholder="Identify yourself"
         options={IDENTIFY_YOURSELF_OPTIONS}
         defaultOption="Select an option"
-        onChange={(value) => setForm({ ...form, mentor_identity: value })}
-        value={form.mentor_identity}
+        onChange={(value) => setForm({ ...form, mentorIdentity: value })}
+        value={form.mentorIdentity}
+        required
       />
       <SelectDropdown
         label="Are you already teaching online?"
-        placeholder="Are you already teaching online?"
         options={ONLINE_TEACHER_OPTIONS}
         defaultOption="Select an option"
-        onChange={(value) => setForm({ ...form, mentor_is_teacher: value })}
-        value={form.mentor_is_teacher}
+        onChange={(value) => setForm({ ...form, mentorIsTeacher: value })}
+        value={form.mentorIsTeacher}
+        required
       />
       <SelectDropdown
         label="How many years of experience do you have in teaching?"
-        placeholder="Experience in teaching"
         options={YEARS_OF_EXPERIENCE_OPTIONS}
         defaultOption="Select an option"
-        onChange={(value) => setForm({ ...form, mentor_experience: value })}
-        value={form.mentor_experience}
+        onChange={(value) => setForm({ ...form, mentorExperience: value })}
+        value={form.mentorExperience}
+        required
       />
       <SelectDropdown
         label="Do you have material or document to teach?"
-        placeholder="Do you have material or document to teach?"
         options={HAVE_MATERIAL_TO_TEACH_OPTIONS}
         defaultOption="Select an option"
-        onChange={(value) =>
-          setForm({ ...form, mentor_document_to_teach: value })
-        }
-        value={form.mentor_document_to_teach}
+        onChange={(value) => setForm({ ...form, mentorHaveDocuments: value })}
+        value={form.mentorHaveDocuments}
+        required
       />
     </div>
   )
