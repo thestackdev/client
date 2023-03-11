@@ -1,5 +1,6 @@
 import { HomeIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 const MentorNavigation = () => {
@@ -8,22 +9,25 @@ const MentorNavigation = () => {
   return (
     <div className="bg-primary p-8 mr-4 text-white w-[300px] h-screen">
       <h1 className="font-bold text-2xl mb-6">Logo</h1>
-      <div
+      <Link
+        href="/mentor/dashboard"
         className={`flex flex-row gap-2 items-center cursor-pointer p-2 rounded-md ${
           router.pathname === '/mentor/dashboard' && 'bg-white text-primary'
         }`}
       >
         <HomeIcon className="h-6 w-6" />
         <span>Home</span>
-      </div>
-      <div
+      </Link>
+      <Link
+        href="/mentor/dashboard/courses"
         className={`flex flex-row gap-2 items-center cursor-pointer my-2 p-2 rounded-md ${
-          router.pathname === '/mentor/courses' && 'bg-white text-primary'
+          router.pathname === '/mentor/dashboard/courses' &&
+          'bg-white text-primary'
         }`}
       >
         <HomeIcon className="h-6 w-6" />
         <span>Your courses</span>
-      </div>
+      </Link>
       <div
         className={`flex flex-row gap-2 items-center cursor-pointer my-2 p-2 rounded-md ${
           router.pathname === '/mentor/calendar' && 'bg-white text-primary'

@@ -117,14 +117,15 @@ const Slots = () => {
         </div>
         <div className="flex flex-row flex-wrap gap-4">
           {timeSlots.map((timeSlot, index) => (
-            <div
-              className={`p-3 rounded-md cursor-pointer border w-52 text-center border-gray-500 ${
+            <button
+              className={`p-2 rounded-md cursor-pointer border w-44 text-center border-gray-500 ${
                 selectedTimeSlots === timeSlot && 'bg-primary text-white'
               }`}
               key={index}
               onClick={() => {
                 setSelectedTimeSlots(timeSlot)
               }}
+              disabled={!availableTimeSlots.includes(timeSlot)}
             >
               <span
                 className={`text-md ${
@@ -137,7 +138,7 @@ const Slots = () => {
               >
                 {timeSlot}
               </span>
-            </div>
+            </button>
           ))}
         </div>
       </div>
