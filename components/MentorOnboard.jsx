@@ -1,5 +1,5 @@
 import { NICHE_OPTIONS } from '@/utils/constants'
-import SelectDropdown from './SelectDrodown'
+import SelectDropdown from './SelectDropdown'
 import TextInput from './TextInput'
 
 export default function MentorOnboard({ form, setForm }) {

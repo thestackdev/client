@@ -1,24 +1,82 @@
 import MentorNavigation from '@/components/mentor/Navigation'
 import NotificationCard from '@/components/mentor/NotificationCard'
+import Progressbar from '@/components/Progressbar'
 import useClickOutside from '@/hooks/useClickOutside'
 import {
   BellIcon,
-  EllipsisVerticalIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
   MagnifyingGlassIcon,
+  VideoCameraIcon,
 } from '@heroicons/react/24/outline'
 import { useRef, useState } from 'react'
 
-const Card = () => {
+const CourseModule = () => {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  function toggleCollapse() {
+    setIsExpanded(!isExpanded)
+  }
+
   return (
-    <div className="flex flex-col w-full gap-4 p-6 shadow-md rounded-md">
-      <div className="flex w-full justify-between">
-        <span>Students</span>
-        <EllipsisVerticalIcon className="h-5 w-5" />
+    <div className="w-full">
+      <div className="flex w-full justify-between p-4 bg-green-100">
+        <div className="flex flex-col">
+          <h1 className="font-bold text-lg">Module 1: Introduction</h1>
+          <span className="text-gray-500">2/2 classes</span>
+        </div>
+        {isExpanded ? (
+          <ChevronUpIcon
+            className="h-5 w-5 cursor-pointer"
+            onClick={toggleCollapse}
+          />
+        ) : (
+          <ChevronDownIcon
+            className="h-5 w-5 cursor-pointer"
+            onClick={toggleCollapse}
+          />
+        )}
       </div>
-      <h1 className="text-2xl font-bold">10</h1>
-      <span className="text-sm">
-        <span className="text-green-500 mr-1">13.2%</span> from May
-      </span>
+      {isExpanded && (
+        <div className="flex flex-col gap-4 p-4">
+          <div className="flex flex-row justify-between w-full">
+            <div className="flex flex-row gap-3">
+              <input type="checkbox" />
+              <div className="flex flex-col">
+                <span className="font-semibold text-sm">
+                  Class 1: Introduction
+                </span>
+                <span className="text-gray-500 ml-2 text-sm">1/1 students</span>
+              </div>
+            </div>
+            <VideoCameraIcon className="h-5 w-5" />
+          </div>
+          <div className="flex flex-row justify-between w-full">
+            <div className="flex flex-row gap-3">
+              <input type="checkbox" />
+              <div className="flex flex-col">
+                <span className="font-semibold text-sm">
+                  Class 1: Introduction
+                </span>
+                <span className="text-gray-500 ml-2 text-sm">1/1 students</span>
+              </div>
+            </div>
+            <VideoCameraIcon className="h-5 w-5" />
+          </div>
+          <div className="flex flex-row justify-between w-full">
+            <div className="flex flex-row gap-3">
+              <input type="checkbox" />
+              <div className="flex flex-col">
+                <span className="font-semibold text-sm">
+                  Class 1: Introduction
+                </span>
+                <span className="text-gray-500 ml-2 text-sm">1/1 students</span>
+              </div>
+            </div>
+            <VideoCameraIcon className="h-5 w-5" />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -79,20 +137,39 @@ const Course = () => {
             <MagnifyingGlassIcon className="h-6 w-6" />
           </div>
         </div>
-        <section className="mt-6">
-          <div className="grid grid-cols-4 mt-4 gap-4">
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-          </div>
-        </section>
-        <table class="table-auto mt-8 w-full p-8 shadow-md rounded-md">
+        <div className="grid grid-cols-3 mt-6">
+          <section className="bg-white col-span-2 shadow-md rounded-md">
+            <h1 className="m-4">Course Progress</h1>
+            <Progressbar progress={80} />
+            <div className="max-h-[500px] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scrollbar-track-rounded-2xl">
+              <CourseModule />
+              <CourseModule />
+              <CourseModule />
+              <CourseModule />
+              <CourseModule />
+            </div>
+          </section>
+          <section className="p-4">
+            <h1 className="text-lg font-bold mb-4">Questions</h1>
+            <div className="rounded-md w-full" ref={notificationRef}>
+              {notifications.map((notification, index) => (
+                <NotificationCard
+                  key={index}
+                  type={notification.type}
+                  description={notification.description}
+                  time={notification.time}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
+        <table className="table-auto mt-8 w-full p-8 shadow-md rounded-md">
           <thead className="">
             <tr className="w-full m-4 text-gray-600 text-left">
               <th className="p-4">Name</th>
               <th className="p-4">Email</th>
-              <th className="p-4">Assessment</th>
+              <th className="p-4">Batch no.</th>
+              <th className="p-4">Attendance</th>
               <th className="p-4"></th>
             </tr>
           </thead>
@@ -107,51 +184,16 @@ const Course = () => {
                 <span className="text-gray-700">Shanmukeshwar</span>
               </td>
               <td className="p-4">thestackdev@fullstacklab.org</td>
-              <td className="p-4">
-                <span className="bg-red-200 p-2 rounded-md text-red-700">
-                  Pending
-                </span>
-              </td>
-              <td className="p-4">
-                <EllipsisVerticalIcon className="h-5 w-5" />
-              </td>
-            </tr>
-            <tr>
-              <td className="flex items-center gap-2 p-4">
-                <img
-                  className="-ml-2 rounded-full w-12 h-12"
-                  src="/png/student1.png"
-                  alt="student"
-                />
-                <span className="text-gray-700">Shanmukeshwar</span>
-              </td>
-              <td className="p-4">thestackdev@fullstacklab.org</td>
-              <td className="p-4">
-                <span className="bg-red-200 p-2 rounded-md text-red-700">
-                  Pending
-                </span>
-              </td>
-              <td className="p-4">
-                <EllipsisVerticalIcon className="h-5 w-5" />
-              </td>
-            </tr>
-            <tr>
-              <td className="flex items-center gap-2 p-4">
-                <img
-                  className="-ml-2 rounded-full w-12 h-12"
-                  src="/png/student1.png"
-                  alt="student"
-                />
-                <span className="text-gray-700">Shanmukeshwar</span>
-              </td>
-              <td className="p-4">thestackdev@fullstacklab.org</td>
+              <td className="p-4">01</td>
               <td className="p-4">
                 <span className="bg-green-200 p-2 rounded-md text-green-700">
-                  Submitted
+                  80%
                 </span>
               </td>
               <td className="p-4">
-                <EllipsisVerticalIcon className="h-5 w-5" />
+                <button className="bg-primary p-2 text-white rounded-md">
+                  Report Card
+                </button>
               </td>
             </tr>
           </tbody>

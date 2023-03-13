@@ -5,7 +5,7 @@ import {
   ONLINE_TEACHER_OPTIONS,
   YEARS_OF_EXPERIENCE_OPTIONS,
 } from '@/utils/constants'
-import SelectDropdown from './SelectDrodown'
+import SelectDropdown from './SelectDropdown'
 
 export default function MentorDetails({ form, setForm }) {
   return (

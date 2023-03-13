@@ -22,7 +22,7 @@ export default function NotificationCard({ type, description, time }) {
   }
 
   return (
-    <div className="flex flex-row gap-4 p-4 w-[300px] overflow-hidden shadow-md bg-white z-[1000]">
+    <div className="flex flex-row gap-4 p-4 w-full min-w-[300px] overflow-hidden shadow-md bg-white z-[1000]">
       {getIconForType(type)}
       <div className="flex flex-col w-full text-left gap-2">
         <span className="text-sm text-gray-600">{description}</span>

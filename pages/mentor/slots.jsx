@@ -1,4 +1,4 @@
-import SelectDropdown from '@/components/SelectDrodown'
+import SelectDropdown from '@/components/SelectDropdown'
 import { MONTHS_OPTIONS } from '@/utils/constants'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'

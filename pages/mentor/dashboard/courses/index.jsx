@@ -2,14 +2,20 @@ import CourseCard from '@/components/mentor/CourseCard'
 import MentorNavigation from '@/components/mentor/Navigation'
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 
 const BatchCard = ({ course }) => {
+
+  const router = useRouter()
+
   return (
     <div className="bg-white flex flex-row justify-between border border-gray-300 rounded-md p-4">
       <div className="border-r w-full flex flex-col gap-4 justify-between p-4 border-r-gray-300">
         <div>
-          <h1 className="text-xl font-bold text-gray-800">{course.title}</h1>
+          <h1 className="text-xl font-bold text-gray-800 cursor-pointer" onClick={() => {
+            router.push(`/mentor/dashboard/courses/1`)
+          }}>{course.title}</h1>
           <p className="text-gray-700 font-semibold">{course.description}</p>
         </div>
         <div className="flex flex-row gap-4">
@@ -42,7 +48,7 @@ const BatchCard = ({ course }) => {
       <div className="flex flex-col ml-4 gap-4">
         {course.batches.map((batch) => (
           <Link
-            href={`/mentor/dashboard/courses/1`}
+            href={`/mentor/dashboard/courses/batch/1`}
             className="text-gray-700 font-semibold p-4 bg-white border flex items-center justify-between w-[300px] border-gray-300 rounded-md"
           >
             {batch.title}

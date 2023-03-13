@@ -129,9 +129,8 @@ function Mentor() {
               <button
                 type="button"
                 onClick={() => setStep(step - 1)}
-                className={`w-full ${
-                  step === 1 && 'invisible'
-                } text-gray-900 rounded-md mt-6 p-2 font-normal flex items-center justify-center`}
+                className={`w-full ${step === 1 && 'invisible'
+                  } text-gray-900 rounded-md mt-6 p-2 font-normal flex items-center justify-center`}
               >
                 Back
               </button>
